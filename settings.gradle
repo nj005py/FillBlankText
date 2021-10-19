@@ -1,2 +1,3 @@
+include ':fill_blank_text'
 include ':app'
 rootProject.name = "FillBlankText"
