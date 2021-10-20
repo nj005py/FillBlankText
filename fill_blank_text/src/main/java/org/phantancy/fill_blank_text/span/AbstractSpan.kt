@@ -6,6 +6,6 @@ import android.widget.TextView
 abstract class AbstractSpan:ReplacementSpan() {
     var mOnClick: OnClickListener? = null
     interface OnClickListener {
-        fun OnClick(v: TextView, id: Int, span: RectSpan)
+        fun OnClick(v: TextView, id: String, span: RectSpan)
     }
 }

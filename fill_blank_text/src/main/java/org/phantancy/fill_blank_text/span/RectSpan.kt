@@ -16,7 +16,7 @@ import androidx.core.content.ContextCompat
 class RectSpan(val context: Context, val mPaint: Paint,var textWidth:Int,var textHeight:Int) : AbstractSpan() {
     var mText = "" //保存的String
     var mObject: Any? = null
-    var id = 0 //回调中的对应Span的ID
+    var id = "" //回调中的对应Span的ID
 //    var mOnClick:OnClickListener? = null
     init {
         textWidth = TypedValue.applyDimension(

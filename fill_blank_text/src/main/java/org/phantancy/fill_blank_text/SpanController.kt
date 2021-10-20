@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.RectF
 import android.text.*
 import android.text.method.LinkMovementMethod
+import android.util.ArrayMap
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -27,7 +28,8 @@ class SpanController {
 
     private var mActy: Activity? = null
     private var checkedSpan: RectSpan? = null
-    var mOldSpan = -1
+    var mOldSpanId = ""
+    var idMap: ArrayMap<String, Int> = ArrayMap()
 
     constructor(mActy: Activity?, tvContent: TextView?, etInput: EditText?) {
         this.tvContent = tvContent
@@ -48,6 +50,7 @@ class SpanController {
                     output: Editable?,
                     xmlReader: XMLReader?
                 ) {
+
                     if (tag.equals(EDITTEXT_TAG_NAME, ignoreCase = true) && opening) {
                         if (tvContent != null) {
                             var paint = TextPaint(tvContent?.paint)
@@ -57,8 +60,10 @@ class SpanController {
                                 span?.mOnClick = mActy as AbstractSpan.OnClickListener
                             }
                             span?.mText = defaultValues[index].defaultValue
-                            span.id = index++
+                            span.id = entity.id
+                            idMap.put(entity.id,index)
                             mSpans.add(span)
+                            index++
                             output?.setSpan(
                                 span,
                                 output.length - 1,
@@ -69,7 +74,7 @@ class SpanController {
                     }
                     if (tag.equals(TEXTVIEW_TAG_NAME, ignoreCase = true) && opening) {
                         if (tvContent != null) {
-                            var paint = TextPaint(tvContent!!.paint)
+                            var paint = TextPaint(tvContent?.paint)
                             val entity = defaultValues[index]
                             val span = RectSpan(tvContent!!.context, paint, entity.blankWidth, entity.blankHeight)
                             if (mActy is AbstractSpan.OnClickListener) {
@@ -77,8 +82,10 @@ class SpanController {
                             }
                             //todo 文本内容
                             span?.mText = defaultValues[index].defaultValue
-                            span.id = index++
+                            span.id = entity.id
+                            idMap.put(entity.id,index)
                             mSpans.add(span)
+                            index++
                             output?.setSpan(
                                 span,
                                 output.length - 1,
@@ -89,31 +96,36 @@ class SpanController {
                     }
                     if (tag.equals(STAR_TAG_NAME, ignoreCase = true) && opening) {
                         if (tvContent != null) {
+                            var paint = TextPaint(tvContent?.paint)
                             val entity = defaultValues[index]
-                            val span = StarSpan(tvContent!!.context,entity.blankWidth)
+                            val span = StarSpan(tvContent!!.context,paint,entity.blankWidth)
                             //todo 文本内容
-                            span.id = index++
+                            span.id = entity.id
+                            idMap.put(entity.id,index)
                             mSpans.add(span)
-//                            output?.setSpan(
-//                                    span,
-//                                    output.length - 1,
-//                                    output.length,
-//                                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-//                            )
+                            index++
                             output?.setSpan(
                                     span,
-                                    0,
-                                    1,
+                                    output.length - 1,
+                                    output.length,
                                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
                             )
+//                            output?.setSpan(
+//                                    span,
+//                                    0,
+//                                    1,
+//                                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+//                            )
                         }
                     }
+
                 }
             })
         tvContent?.setText(spanned)
     }
 
-    fun setSpanChecked(position: Int){
+    fun setSpanChecked(id: String){
+        val position = idMap.get(id) ?: return
         if (mSpans[position] is RectSpan){
             checkedSpan = mSpans[position] as RectSpan
             tvContent?.invalidate()
@@ -125,12 +137,11 @@ class SpanController {
     var mFontTop :Int = 0
     var mFontBottom: Int = 0
     //填充缓存的数据
-    fun setData(str: String, o: Any?, i: Int) {
-        if (tvContent == null || mSpans == null || mSpans.size == 0 || i < 0 || i > mSpans.size - 1) return
-//        val span: RectSpan = mSpans[i]
-//        span.mText = str
-        if (mSpans[i] is RectSpan) {
-            (mSpans[i] as RectSpan).mText = str
+    fun setData(str: String, id: String) {
+        val pos = idMap.get(id) ?: return
+        if (tvContent == null || mSpans == null || mSpans.size == 0 || pos < 0 || pos > mSpans.size - 1) return
+        if (mSpans[pos] is RectSpan) {
+            (mSpans[pos] as RectSpan).mText = str
             tvContent?.invalidate()
         }
     }

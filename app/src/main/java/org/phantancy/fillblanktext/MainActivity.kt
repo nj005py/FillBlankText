@@ -29,23 +29,22 @@ class MainActivity : AppCompatActivity(), AbstractSpan.OnClickListener {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         var blankList = arrayListOf<BlankEntity>(
-            BlankEntity("<Star>","",5,0),
-            BlankEntity("<EditText>","",100,30),
-            BlankEntity("<EditText>","",100,30),
-            BlankEntity("<TextView>","长长长长长长长长文本a",200,30)
+                BlankEntity("star", "<Star>", "", 10, 0),
+                BlankEntity("et_one", "<EditText>", "", 100, 40),
+                BlankEntity("et_two", "<EditText>", "", 100, 30),
+                BlankEntity("tv_one", "<TextView>", "长长长长长长长长文本a", 200, 30)
         )
-        //<font color='red'><big>*</big></font>
         val content =
-            "${blankList[0].tag}1、第一期租金于签合同当日交纳，下次付租日为每期应付日前${blankList[1].tag}天，乙方如逾期支付租金，每逾期一天，则乙方需按日租金的${blankList[2].tag}%支付滞纳金。协商不成，任一方均可${blankList[3].tag}"
+                "*${blankList[0].tag}1、输入框内容内容内容1.1 ${blankList[1].tag}输入框内容内容内容内容1.2 ${blankList[2].tag}点击弹窗内容内容内容1.3 ${blankList[3].tag}"
         mSpanManager = SpanController(this, binding.tvSpan, binding.etSpan)
-        mSpanManager.fillBlank(content,blankList)
+        mSpanManager.fillBlank(content, blankList)
 
         binding.btnSave.setOnClickListener { v ->
             val imm: InputMethodManager =
-                getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             if (imm != null) {
                 imm.hideSoftInputFromWindow(
-                    getWindow().getDecorView().getWindowToken(), 0
+                        getWindow().getDecorView().getWindowToken(), 0
                 )
             }
             mSpanManager.setLastCheckedSpanText(binding.etSpan.text.toString())
@@ -83,36 +82,32 @@ class MainActivity : AppCompatActivity(), AbstractSpan.OnClickListener {
 
     }
 
-    override fun OnClick(v: TextView, id: Int, span: RectSpan) {
+    override fun OnClick(v: TextView, id: String, span: RectSpan) {
         if (v.id == R.id.tv_span) {
-            if (id == 2) {
+            if (id.equals("tv_one")) {
                 binding.etSpan.visibility = View.GONE
                 val imm: InputMethodManager =
-                    getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                        getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 if (imm != null) {
                     imm.hideSoftInputFromWindow(
-                        getWindow().getDecorView().getWindowToken(), 0
+                            getWindow().getDecorView().getWindowToken(), 0
                     )
                 }
                 mSpanManager.setData(
-                    binding.etSpan.getText().toString(),
-                    null,
-                    mSpanManager.mOldSpan
+                        binding.etSpan.getText().toString(), mSpanManager.mOldSpanId
                 )
                 showPicker(span, arrayListOf("长长长长长长长长文本a", "长长长长长长长长文本b"), id)
-            } else{
+            } else {
                 binding.etSpan.visibility = View.VISIBLE
                 //设置选中的id
                 mSpanManager.setSpanChecked(id)
                 mSpanManager.setData(
-                    binding.etSpan.getText().toString(),
-                    null,
-                    mSpanManager.mOldSpan
+                        binding.etSpan.getText().toString(), mSpanManager.mOldSpanId
                 )
-                mSpanManager.mOldSpan = id
+                mSpanManager.mOldSpanId = id
                 //如果当前span身上有值，先赋值给et身上
                 binding.etSpan.setText(
-                    if (TextUtils.isEmpty(span.mText)) "" else span.mText
+                        if (TextUtils.isEmpty(span.mText)) "" else span.mText
                 )
                 binding.etSpan.setSelection(binding.etSpan.getText().length)
                 span.mText = ""
@@ -124,25 +119,23 @@ class MainActivity : AppCompatActivity(), AbstractSpan.OnClickListener {
         }
     }
 
-    private fun showPicker(span: RectSpan, list: List<String>, id: Int) {
+    private fun showPicker(span: RectSpan, list: List<String>, id: String) {
         if (list == null) {
             return
         }
         val picker: OptionsPickerView<String> = OptionsPickerBuilder(
-            this
+                this
         ) { options1, options2, options3, v ->
             if (span != null) {
-
-
-                mSpanManager.setData(list[options1], null, id)
+                mSpanManager.setData(list[options1], id)
                 span.mText = list[options1]
                 vo.z = list[options1]
             }
         }.setSelectOptions(0)
-            .setCancelColor(Color.parseColor("#fdc915"))
-            .setSubmitColor(Color.parseColor("#fdc915"))
-            .setOutSideCancelable(false)
-            .build<String>()
+                .setCancelColor(Color.parseColor("#fdc915"))
+                .setSubmitColor(Color.parseColor("#fdc915"))
+                .setOutSideCancelable(false)
+                .build<String>()
         picker.setPicker(list)
         picker.show()
     }

@@ -7,8 +7,9 @@ import android.graphics.Paint
 import android.text.style.ReplacementSpan
 import android.util.TypedValue
 
-class StarSpan(val context: Context, var size: Int) : AbstractSpan() {
-    var id = 0 //回调中的对应Span的ID
+class StarSpan(val context: Context, val mPaint: Paint, var size: Int) : AbstractSpan() {
+    var id = "" //回调中的对应Span的ID
+
     init {
         size = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, size.toFloat(), context.resources.displayMetrics).toInt()
     }
@@ -34,10 +35,17 @@ class StarSpan(val context: Context, var size: Int) : AbstractSpan() {
             bottom: Int,
             paint: Paint
     ) {
-        val mPaint = Paint().apply {
+//        val mPaint = Paint().apply {
+//            color = Color.RED
+//            textSize = 60f
+//        }
+        mPaint.apply {
             color = Color.RED
         }
-        canvas.drawText("*",0,1,x + size,y.toFloat(),mPaint)
+        var width = paint.measureText("*", 0, 1).toInt()
+        width = (size - width) / 2
+        var height = (bottom - top) / 2
+        canvas.drawText("*", 0, 1, x + width, bottom.toFloat(), mPaint)
     }
 
 }
