@@ -33,6 +33,34 @@
             />
     </FrameLayout>
 
+    <!--1.2-->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
+        >
+
+        <TextView
+            android:id="@+id/tv_span2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:textColor="@color/black"
+            />
+        <EditText
+            android:id="@+id/et_span2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textCursorDrawable="@null"
+            android:background="@android:color/transparent"
+            android:gravity="center"
+            android:textSize="16dp"
+            android:inputType="number"
+            />
+    </FrameLayout>
+
     <Button
         android:id="@+id/btn_save"
         android:layout_width="wrap_content"
