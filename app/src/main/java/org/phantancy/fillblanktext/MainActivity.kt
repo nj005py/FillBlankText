@@ -15,32 +15,28 @@ import com.bigkoo.pickerview.builder.OptionsPickerBuilder
 import com.bigkoo.pickerview.view.OptionsPickerView
 import org.phantancy.fill_blank_text.SpanController
 import org.phantancy.fill_blank_text.entity.BlankEntity
+import org.phantancy.fill_blank_text.span.AbstractSpan
 import org.phantancy.fill_blank_text.span.RectSpan
 import org.phantancy.fillblanktext.databinding.ActivityMainBinding
 import org.phantancy.fillblanktext.entity.ContractVO
 
-class MainActivity : AppCompatActivity(),RectSpan.OnClickListener {
+class MainActivity : AppCompatActivity(), AbstractSpan.OnClickListener {
     lateinit var binding: ActivityMainBinding
     lateinit var mSpanManager: SpanController
     var vo: ContractVO = ContractVO()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-//        setContentView(R.layout.activity_main)
         setContentView(binding.root)
-        var list:ArrayList<String>? = arrayListOf("list")
-//        startActivity(
-//            Intent(this, SecondActivity::class.java)
-//                .putStringArrayListExtra("list", list)
-//        )
-        var defaultValues = arrayListOf<String>("","","txt1")
         var blankList = arrayListOf<BlankEntity>(
+            BlankEntity("<Star>","",5,0),
             BlankEntity("<EditText>","",100,30),
             BlankEntity("<EditText>","",100,30),
             BlankEntity("<TextView>","长长长长长长长长文本a",200,30)
         )
+        //<font color='red'><big>*</big></font>
         val content =
-            "<font color='red'><big>*</big></font>1、第一期租金于签合同当日交纳，下次付租日为每期应付日前${blankList[0].tag}天，乙方如逾期支付租金，每逾期一天，则乙方需按日租金的${blankList[1].tag}%支付滞纳金。协商不成，任一方均可${blankList[2].tag}"
+            "${blankList[0].tag}1、第一期租金于签合同当日交纳，下次付租日为每期应付日前${blankList[1].tag}天，乙方如逾期支付租金，每逾期一天，则乙方需按日租金的${blankList[2].tag}%支付滞纳金。协商不成，任一方均可${blankList[3].tag}"
         mSpanManager = SpanController(this, binding.tvSpan, binding.etSpan)
         mSpanManager.fillBlank(content,blankList)
 

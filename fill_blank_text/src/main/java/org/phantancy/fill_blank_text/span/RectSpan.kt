@@ -13,11 +13,11 @@ import android.util.TypedValue
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 
-class RectSpan(val context: Context, val mPaint: Paint,var textWidth:Int,var textHeight:Int) : ReplacementSpan() {
+class RectSpan(val context: Context, val mPaint: Paint,var textWidth:Int,var textHeight:Int) : AbstractSpan() {
     var mText = "" //保存的String
     var mObject: Any? = null
     var id = 0 //回调中的对应Span的ID
-    var mOnClick:OnClickListener? = null
+//    var mOnClick:OnClickListener? = null
     init {
         textWidth = TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
@@ -80,8 +80,8 @@ class RectSpan(val context: Context, val mPaint: Paint,var textWidth:Int,var tex
         mOnClick?.OnClick(v, id, this)
     }
 
-    interface OnClickListener {
-        fun OnClick(v: TextView, id: Int, span: RectSpan)
-    }
+//    interface OnClickListener {
+//        fun OnClick(v: TextView, id: Int, span: RectSpan)
+//    }
 
 }
