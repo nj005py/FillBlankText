@@ -24,86 +24,63 @@ class MainActivity : AppCompatActivity(), AbstractSpan.OnClickListener {
     lateinit var binding: ActivityMainBinding
     lateinit var mSpanController: SpanController
     lateinit var mSpanController2: SpanController
+    lateinit var mSpanController3: SpanController
+    lateinit var mSpanController4: SpanController
     var vo: ContractVO = ContractVO()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        //1
         var blankList = arrayListOf<BlankEntity>(
                 BlankEntity("star", "<Star>", "", 10, 0),
                 BlankEntity("et_one", "<EditText>", "", 100, 40),
                 BlankEntity("et_two", "<EditText>", "", 100, 30),
                 BlankEntity("tv_one", "<TextView>", "长长长长长长长长文本a", 200, 30)
         )
-        val content = "*${blankList[0].tag}1、输入框内容内容内容内容内容1.1 ${blankList[1].tag}输入框内容内容内容内容1.2 ${blankList[2].tag}点击弹窗内容内容内容1.3 ${blankList[3].tag}"
+        val content = "*${blankList[0].tag}1、文文文文文文文文文文文文文文文文文文文文文文文文文文文文文输入框1.1 ${blankList[1].tag}" +
+                "文文文文文文文文文文文文文文文文文文文文文文文文文文文输入框1.2 ${blankList[2].tag}文文文文文文文点击弹窗1.3 ${blankList[3].tag}"
         mSpanController = SpanController(this, binding.tvSpan, binding.etSpan)
         mSpanController.fillBlank(content, blankList)
-
+        //2
         var blankList2 = arrayListOf<BlankEntity>(
                 BlankEntity("star", "<Star>", "", 10, 0),
                 BlankEntity("et_one", "<EditText>", "", 120, 30),
         )
-        val content2 = "*${blankList2[0].tag}2、输入框内容内容内容内容内容内容内容内容内容1.1 ${blankList[1].tag}内容内容内容内容内容内容内容内容"
-        mSpanController2 = SpanController(this,binding.tvSpan2,binding.etSpan2)
-        mSpanController2.fillBlank(content2,blankList2)
+        val content2 = "*${blankList2[0].tag}2、文文文文文文文文文文文文文文文输入框2.1 ${blankList[1].tag}文文文文文文文文文文文文文文文文文文文文文文文文文文文文"
+        mSpanController2 = SpanController(this, binding.tvSpan2, binding.etSpan2)
+        mSpanController2.fillBlank(content2, blankList2)
+        //3
+        var blankList3 = arrayListOf<BlankEntity>(
+                BlankEntity("star", "<Star>", "", 10, 0),
+                BlankEntity("tv_one", "<TextView>", "文本a", 120, 30),
+        )
+        val content3 = "*${blankList3[0].tag}3、文文文文文文文文文文文文文文文文文文文文文文文文文文文文文文文文文文文文文点击弹窗3.1 ${blankList[1].tag}文"
+        mSpanController3 = SpanController(this, binding.tvSpan3, binding.etSpan2)
+        mSpanController3.fillBlank(content3, blankList3)
+
+        //输入4
+        var blankList4 = arrayListOf<BlankEntity>(
+                BlankEntity("et_one", "<EditText>", "", 120, 30),
+        )
+        val content4 = "4.1文文文文文文文文文文文文文文文文文文文文文文文文文文文文文文文文文文文文文${blankList4[0].tag}文文文文文文"
+        mSpanController4 = SpanController(this, binding.tvSpan4, binding.etSpan4)
+        mSpanController4.fillBlank(content4, blankList4)
+        //保存
         binding.btnSave.setOnClickListener { v ->
-            val imm: InputMethodManager =
-                    getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            if (imm != null) {
-                imm.hideSoftInputFromWindow(
-                        getWindow().getDecorView().getWindowToken(), 0
-                )
-            }
-            mSpanController.setLastCheckedSpanText(binding.etSpan.text.toString())
-
-            val contractResult = mSpanController.getResult()
-            if (contractResult[0].isNullOrEmpty()) {
-                Toast.makeText(this, "第1条不能为空", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            } else {
-                vo.x = contractResult[0]
-            }
-            if (contractResult[1].isNullOrEmpty()) {
-                Toast.makeText(this, "第2条不能为空", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            } else {
-                vo.y = contractResult[1]
-            }
-            if (contractResult[2].isNullOrEmpty()) {
-                Toast.makeText(this, "第3条不能为空", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            } else {
-                vo.z = contractResult[2]
-            }
-            Log.i("vo", "${vo.toString()}")
+            checkInfo()
         }
-//        vo.apply {
-//            x = "1"
-//            y = "2"
-//            z = "zzz"
-//        }
-//
-//        vo.x?.let { mSpanManager.setData(it, null, 0) }
-//        vo.y?.let { mSpanManager.setData(it, null, 1) }
-//        vo.z?.let { mSpanManager.setData(it, null, 2) }
-
     }
 
     override fun OnClick(v: TextView, id: String, span: RectSpan) {
         if (v.id == R.id.tv_span) {
             if (id.equals("tv_one")) {
                 binding.etSpan.visibility = View.GONE
-                val imm: InputMethodManager =
-                        getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                if (imm != null) {
-                    imm.hideSoftInputFromWindow(
-                            getWindow().getDecorView().getWindowToken(), 0
-                    )
-                }
+                hideInputMethod()
                 mSpanController.setData(
                         binding.etSpan.getText().toString(), mSpanController.mOldSpanId
                 )
-                showPicker(span, arrayListOf("长长长长长长长长文本a", "长长长长长长长长文本b"), id)
+                showPicker(span, arrayListOf("长长长长长长长长文本a", "长长长长长长长长文本b"), id, mSpanController)
             } else {
                 binding.etSpan.visibility = View.VISIBLE
                 //设置选中的id
@@ -121,9 +98,9 @@ class MainActivity : AppCompatActivity(), AbstractSpan.OnClickListener {
                 //通过rf计算出et当前应该显示的位置
                 val rf: RectF = mSpanController.getSpanRect(span)
                 //设置EditText填空题中的相对位置
-                mSpanController.setEtXY(rf)
+                mSpanController.setEditTextRectF(rf)
             }
-        } else if(v.id == R.id.tv_span2){
+        } else if (v.id == R.id.tv_span2) {
             binding.etSpan2.visibility = View.VISIBLE
             //设置选中的id
             mSpanController2.setSpanChecked(id)
@@ -140,11 +117,25 @@ class MainActivity : AppCompatActivity(), AbstractSpan.OnClickListener {
             //通过rf计算出et当前应该显示的位置
             val rf: RectF = mSpanController2.getSpanRect(span)
             //设置EditText填空题中的相对位置
-            mSpanController2.setEtXY(rf)
+            mSpanController2.setEditTextRectF(rf)
+        } else if (v.id == R.id.tv_span3) {
+            if (id.equals("tv_one")) {
+                showPicker(span, arrayListOf("文本a", "文本b"), id, mSpanController3)
+            }
+        } else if (v.id == R.id.tv_span4) {
+            binding.etSpan4.visibility = View.VISIBLE
+            mSpanController4.setSpanChecked(id)
+            mSpanController4.setData(binding.etSpan4.text.toString(), mSpanController4.mOldSpanId)
+            mSpanController4.mOldSpanId = id
+            binding.etSpan4.setText(if (TextUtils.isEmpty(span.mText)) "" else span.mText)
+            binding.etSpan4.setSelection(binding.etSpan4.text.length)
+            span.mText = ""
+            val rf: RectF = mSpanController4.getSpanRect(span)
+            mSpanController4.setEditTextRectF(rf)
         }
     }
 
-    private fun showPicker(span: RectSpan, list: List<String>, id: String) {
+    private fun showPicker(span: RectSpan, list: List<String>, id: String, spanController: SpanController) {
         if (list == null) {
             return
         }
@@ -152,7 +143,7 @@ class MainActivity : AppCompatActivity(), AbstractSpan.OnClickListener {
                 this
         ) { options1, options2, options3, v ->
             if (span != null) {
-                mSpanController.setData(list[options1], id)
+                spanController.setData(list[options1], id)
                 span.mText = list[options1]
                 vo.z = list[options1]
             }
@@ -163,5 +154,41 @@ class MainActivity : AppCompatActivity(), AbstractSpan.OnClickListener {
                 .build<String>()
         picker.setPicker(list)
         picker.show()
+    }
+
+    fun hideInputMethod(){
+        val imm: InputMethodManager =
+                getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(
+                    getWindow().getDecorView().getWindowToken(), 0
+            )
+        }
+    }
+
+    fun checkInfo(){
+        hideInputMethod()
+        mSpanController.setLastCheckedSpanText(binding.etSpan.text.toString())
+
+        val contractResult = mSpanController.getResult()
+        if (contractResult[0].isNullOrEmpty()) {
+            Toast.makeText(this, "第1条不能为空", Toast.LENGTH_SHORT).show()
+            return
+        } else {
+            vo.x = contractResult[0]
+        }
+        if (contractResult[1].isNullOrEmpty()) {
+            Toast.makeText(this, "第2条不能为空", Toast.LENGTH_SHORT).show()
+            return
+        } else {
+            vo.y = contractResult[1]
+        }
+        if (contractResult[2].isNullOrEmpty()) {
+            Toast.makeText(this, "第3条不能为空", Toast.LENGTH_SHORT).show()
+            return
+        } else {
+            vo.z = contractResult[2]
+        }
+        Log.i("vo", "${vo.toString()}")
     }
 }

@@ -80,7 +80,6 @@ class SpanController {
                             if (mActy is AbstractSpan.OnClickListener) {
                                 span?.mOnClick = mActy as AbstractSpan.OnClickListener
                             }
-                            //todo 文本内容
                             span?.mText = defaultValues[index].defaultValue
                             span.id = entity.id
                             idMap.put(entity.id,index)
@@ -99,7 +98,6 @@ class SpanController {
                             var paint = TextPaint(tvContent?.paint)
                             val entity = defaultValues[index]
                             val span = StarSpan(tvContent!!.context,paint,entity.blankWidth)
-                            //todo 文本内容
                             span.id = entity.id
                             idMap.put(entity.id,index)
                             mSpans.add(span)
@@ -110,12 +108,6 @@ class SpanController {
                                     output.length,
                                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
                             )
-//                            output?.setSpan(
-//                                    span,
-//                                    0,
-//                                    1,
-//                                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-//                            )
                         }
                     }
 
@@ -169,7 +161,8 @@ class SpanController {
         return mRf as RectF
     }
 
-    fun setEtXY(rf: RectF){
+    //设置Edittext位置
+    fun setEditTextRectF(rf: RectF){
         if (etInput != null && tvContent != null) {
             val lp = etInput!!.layoutParams as FrameLayout.LayoutParams
             lp.width = (rf.right - rf.left).toInt()
